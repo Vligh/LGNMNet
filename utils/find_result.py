@@ -89,11 +89,26 @@ def post_process(args, result, P=0.55, win=11, order=8, tiny=0.7, rate=4, bool_p
                     min(ii + int(tiny * args.K), len(Y_POST)))
                 peaks_pair.append([onset, offset, np.mean(Y_POST[onset:offset])])
         else:
+            done_pair = peaks < -1
             for i in range(len(peaks) - 1):
-                onset, offset = int(max(0, peaks[i] - int(tiny * args.K))), int(
-                    min(peaks[i + 1] + int(tiny * args.K), len(Y_POST)))
-                if offset - onset > rate * args.K: continue
-                peaks_pair.append([onset, offset, np.mean(Y_POST[onset:offset])])
+                for j in range(len(peaks)):
+                    if i>=j:continue
+                    onset, offset = int(max(0, peaks[i] - int(tiny * args.K))), int(
+                        min(peaks[j] + int(tiny * args.K), len(Y_POST)))
+                    if offset - onset <= rate * args.K:
+                        done_pair[i], done_pair[j] = True, True
+                        peaks_pair.append([onset, offset, np.mean(Y_POST[onset:offset])])
+            for i in range(len(peaks)):
+                if not done_pair[i]:
+                    onset, offset = int(max(0, peaks[i] - int(tiny * args.K))), int(
+                        min(peaks[i] + int(tiny * args.K), len(Y_POST)))
+                    peaks_pair.append([onset, offset, np.mean(Y_POST[onset:offset])])
+
+            # for i in range(len(peaks) - 1):
+            #     onset, offset = int(max(0, peaks[i] - int(tiny * args.K))), int(
+            #         min(peaks[i + 1] + int(tiny * args.K), len(Y_POST)))
+            #     if offset - onset > rate * args.K: continue
+            #     peaks_pair.append([onset, offset, np.mean(Y_POST[onset:offset])])
         if len(peaks_pair) > 1:
             peaks_pair = softnms_v2(peaks_pair)
             peaks_pair = recursive_merge(sorted(peaks_pair))
@@ -159,30 +174,6 @@ def ParameterOptimizationAll(args, results):
                        'TP': int(best_TP),
                        'FP': int(best_FP), 'FN': int(best_FN)}
     return ParameterResult
-
-
-def ParameterOptimizationHAHA(args, results):
-    TINY = {}
-    for tiny in np.linspace(0.1, 1., num=10
-                            ):
-        P = {}
-        for p in np.linspace(0.1, 1, num=10):
-            one_subject_TP, one_subject_FP, one_subject_FN = 0, 0, 0
-            for i in results:
-                result, label = i['result'], i['label']
-                pred_inter = post_process(args, result, P=p, win=13, order=4, tiny=tiny)
-                if len(pred_inter) < 1:
-                    TP, FP, FN = 0, 0, len(label)
-                else:
-                    TP, FP, FN = spotting_evaluation_V2(pred_inter, label)
-                one_subject_TP += TP
-                one_subject_FP += FP
-                one_subject_FN += FN
-            recall, precision, f1_score = cal_f1_score(one_subject_TP, one_subject_FP,
-                                                           one_subject_FN)
-            P[p] = f1_score
-        TINY[tiny] = P
-    return TINY
 
 
 def plot_result(args, result, parameter, rate=4, bool_peak=False):
