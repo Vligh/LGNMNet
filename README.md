@@ -1,4 +1,7 @@
-## Lite General Network And MagFace CNN for Macro- and Micro-expression Spotting from Long Videos
+## LGNMNet: Lite General Network And MagFace CNN for Macro- and Micro-expression Spotting from Long Videos
+
+## Updates
+- (August 12, 2022) Release training and inference code.
 
 ### Introduction
 
@@ -114,6 +117,14 @@ SAMM Long Videos - http://www2.docm.mmu.ac.uk/STAFF/M.Yap/dataset.php
   └── LOG_SAMM_Micro.txt 
   ```
   
-### Contact
-
-##### Please email us at yangsai1991@163.com if you have any inquiries or issues.
+## Citation
+If you find this project useful for your research, please use the following BibTeX entry.
+```
+@InProceedings{Pattern rec Letter,
+    author    = {Sai, Yang},
+    title     = {Lite General Network And MagFace CNN for Macro- and Micro-expression Spotting from Long Videos},
+    month     = {August},
+    year      = {2022},
+    email     = {yangsai@wxsbank.com}
+}
+```
