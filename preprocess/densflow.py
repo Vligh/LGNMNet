@@ -63,7 +63,7 @@ def multi_process(args, labelList):
             flows = cv2.calcOpticalFlowFarneback(img1, img2, None, 0.702, 5, 10, 2, 7, 1.5, cv2.OPTFLOW_FARNEBACK_GAUSSIAN)
             # flows = cv2.calcOpticalFlowFarneback(img1, img2, None, 0.5, 3, 15, 3, 5, 1.2, 0)
             # bgr
-            # flows = flow2bgr(flows)
+            flows = flow2bgr(flows)
             final_image = extract_preprocess(flows, lmks[j]['lmk'], img_size=args.lmk_size)
             # img = cv2.resize(final_image, (96, 96))
             # flow_x, flow_y
