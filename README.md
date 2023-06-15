@@ -125,6 +125,6 @@ If you find this project useful for your research, please use the following BibT
     title     = {Lite General Network And MagFace CNN for Macro- and Micro-expression Spotting from Long Videos},
     month     = {August},
     year      = {2022},
-    email     = {yangsai@wxsbank.com}
+    email     = {yangsai1991@163.com}
 }
 ```
